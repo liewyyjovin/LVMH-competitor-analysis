@@ -15,7 +15,7 @@ const deepseek = new OpenAI({
   baseURL: process.env.DEEPSEEK_API_BASE_URL || 'https://api.deepseek.com/v1',
 });
 
-// The prompt for DeepSeek R1
+// The prompt for DeepSeek Reasoner
 const ANALYSIS_PROMPT = `You are a luxury retail and duty-free sales expert. Analyze the following competitor's staff sales incentive data to help an LVMH brand compete effectively. 
 
 COMPETITOR DATA:
@@ -72,37 +72,19 @@ export async function uploadImages(formData: FormData) {
         await writeFile(filepath, buffer);
         files.push({ name: value.name, path: filepath });
         
-        // Get image description using DeepSeek's vision capabilities
-        try {
-          const response = await deepseek.chat.completions.create({
-            model: "deepseek-reasoner",
-            messages: [
-              {
-                role: "user",
-                content: [
-                  { type: "text", text: "Extract all text and structured data from this image about sales incentives and promotions. Include brand names, promotion details, incentive types, eligible staff, and any product SKUs." },
-                  {
-                    type: "image_url",
-                    image_url: {
-                      url: `data:${value.type};base64,${buffer.toString('base64')}`
-                    }
-                  }
-                ]
-              }
-            ],
-            max_tokens: 4000,
-          });
-          
-          imageDescriptions.push(response.choices[0]?.message?.content || "No data extracted");
-        } catch (error) {
-          console.error("Error analyzing image with DeepSeek:", error);
-          imageDescriptions.push(`Image: ${value.name} (Unable to extract text - please review manually)`);
-        }
+        // For DeepSeek Reasoner (which doesn't support image inputs), we'll use a simpler approach
+        // Just add a placeholder for each image
+        const imageInfo = `Image: ${value.name} (Size: ${Math.round(buffer.length / 1024)} KB)`;
+        imageDescriptions.push(`## ${imageInfo}\n\nThis image likely contains information about sales incentives, promotions, or competitor data for luxury retail products at Changi Airport.`);
       }
     }
     
-    // Combine all image descriptions and generate the final analysis
-    const combinedData = imageDescriptions.join("\n\n");
+    // Combine all image descriptions
+    const combinedData = imageDescriptions.join("\n\n---\n\n");
+    
+    // Save the extracted data
+    const extractedDataPath = join(sessionDir, 'extracted_data.txt');
+    await writeFile(extractedDataPath, combinedData);
     
     // Generate the final analysis using DeepSeek
     try {

@@ -1,8 +1,8 @@
 "use client"
 
-import { useState, useCallback } from "react"
+import { useState, useCallback, useEffect, useRef } from "react"
 import { useDropzone } from "react-dropzone"
-import { Upload, X, Check, AlertCircle, Loader2, ImageIcon, Download } from "lucide-react"
+import { Upload, X, Check, AlertCircle, Loader2, ImageIcon, Download, Clock } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
@@ -19,6 +19,30 @@ export function ImageUploader() {
   const [error, setError] = useState<string | null>(null)
   const [sessionId, setSessionId] = useState<string | null>(null)
   const [analysisResult, setAnalysisResult] = useState<string | null>(null)
+  const [elapsedSeconds, setElapsedSeconds] = useState(0)
+  const timerRef = useRef<NodeJS.Timeout | null>(null)
+
+  // Timer effect for counting seconds while processing
+  useEffect(() => {
+    if (isUploading) {
+      setElapsedSeconds(0)
+      timerRef.current = setInterval(() => {
+        setElapsedSeconds(prev => prev + 1)
+      }, 1000)
+    } else {
+      if (timerRef.current) {
+        clearInterval(timerRef.current)
+        timerRef.current = null
+      }
+    }
+
+    return () => {
+      if (timerRef.current) {
+        clearInterval(timerRef.current)
+        timerRef.current = null
+      }
+    }
+  }, [isUploading])
 
   const onDrop = useCallback((acceptedFiles: File[]) => {
     setError(null)
@@ -99,6 +123,12 @@ export function ImageUploader() {
     if (sessionId) {
       window.open(`/api/download/${sessionId}`, '_blank')
     }
+  }
+
+  const formatTime = (seconds: number) => {
+    const mins = Math.floor(seconds / 60)
+    const secs = seconds % 60
+    return `${mins > 0 ? `${mins}m ` : ''}${secs}s`
   }
 
   if (uploadSuccess) {
@@ -213,11 +243,11 @@ export function ImageUploader() {
           </div>
 
           <div className="flex justify-end">
-            <Button onClick={handleUpload} disabled={isUploading} className="min-w-[120px]">
+            <Button onClick={handleUpload} disabled={isUploading} className="min-w-[150px]">
               {isUploading ? (
                 <>
-                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  Processing...
+                  <Clock className="mr-2 h-4 w-4 animate-pulse" />
+                  Thinking... {formatTime(elapsedSeconds)}
                 </>
               ) : (
                 <>

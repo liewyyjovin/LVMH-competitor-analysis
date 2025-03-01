@@ -18,10 +18,144 @@ export async function generateWordDocument(sessionId: string, analysisData: Anal
   // Parse the analysis content
   const { analysis } = analysisData;
   
+  // Create sections for the document
+  const children: Paragraph[] = [];
+
+  // Title
+  children.push(
+    new Paragraph({
+      text: "LVMH Competitor Analysis Report",
+      heading: HeadingLevel.HEADING_1,
+      alignment: AlignmentType.CENTER,
+    })
+  );
+
+  // Metadata
+  children.push(
+    new Paragraph({
+      text: `Generated on: ${new Date(analysisData.timestamp).toLocaleString()}`,
+      alignment: AlignmentType.RIGHT,
+    })
+  );
+  
+  children.push(
+    new Paragraph({
+      text: `Number of images analyzed: ${analysisData.imageCount}`,
+      alignment: AlignmentType.RIGHT,
+    })
+  );
+
+  // Separator
+  children.push(new Paragraph({}));
+
+  // Process the analysis content
+  // We'll split the content into sections based on markdown-like formatting
+  const lines = analysis.split('\n');
+  let currentSection = '';
+  let inTable = false;
+  let tableRows: string[][] = [];
+  let tableHeaders: string[] = [];
+
+  for (let i = 0; i < lines.length; i++) {
+    const line = lines[i].trim();
+    
+    // Check if this is a heading
+    if (line.startsWith('# ')) {
+      // Add a new heading
+      children.push(
+        new Paragraph({
+          text: line.substring(2),
+          heading: HeadingLevel.HEADING_1,
+        })
+      );
+    } else if (line.startsWith('## ')) {
+      // Add a new subheading
+      children.push(
+        new Paragraph({
+          text: line.substring(3),
+          heading: HeadingLevel.HEADING_2,
+        })
+      );
+    } else if (line.startsWith('|') && line.endsWith('|')) {
+      // This is a table row
+      if (!inTable) {
+        inTable = true;
+        // This is the header row
+        tableHeaders = line
+          .split('|')
+          .filter(cell => cell.trim() !== '')
+          .map(cell => cell.trim());
+      } else if (line.includes('---')) {
+        // This is the separator row, skip it
+        continue;
+      } else {
+        // This is a data row
+        const rowData = line
+          .split('|')
+          .filter(cell => cell.trim() !== '')
+          .map(cell => cell.trim());
+        
+        tableRows.push(rowData);
+      }
+    } else if (inTable && !line.startsWith('|')) {
+      // End of table
+      inTable = false;
+      
+      // Create the table
+      if (tableHeaders.length > 0 && tableRows.length > 0) {
+        const table = createTable(tableHeaders, tableRows);
+        children.push(table);
+        
+        // Reset table data
+        tableHeaders = [];
+        tableRows = [];
+      }
+      
+      // Add the current line if it's not empty
+      if (line) {
+        children.push(new Paragraph({ text: line }));
+      }
+    } else if (line.startsWith('- ')) {
+      // Bullet point
+      children.push(
+        new Paragraph({
+          text: line.substring(2),
+          bullet: {
+            level: 0
+          }
+        })
+      );
+    } else if (line.startsWith('  - ')) {
+      // Nested bullet point
+      children.push(
+        new Paragraph({
+          text: line.substring(4),
+          bullet: {
+            level: 1
+          }
+        })
+      );
+    } else if (line) {
+      // Regular paragraph
+      children.push(new Paragraph({ text: line }));
+    } else {
+      // Empty line
+      children.push(new Paragraph({}));
+    }
+  }
+  
+  // If we're still in a table at the end, add it
+  if (inTable && tableHeaders.length > 0 && tableRows.length > 0) {
+    const table = createTable(tableHeaders, tableRows);
+    children.push(table);
+  }
+
   // Create a new document
   const doc = new Document({
-    title: "Competitive Analysis Report",
-    description: "LVMH Competitor Analysis Report",
+    sections: [{
+      properties: {},
+      children: children
+    }],
     styles: {
       paragraphStyles: [
         {
@@ -63,143 +197,6 @@ export async function generateWordDocument(sessionId: string, analysisData: Anal
     }
   });
 
-  // Create sections for the document
-  const sections = [];
-
-  // Title
-  sections.push(
-    new Paragraph({
-      text: "LVMH Competitor Analysis Report",
-      heading: HeadingLevel.HEADING_1,
-      alignment: AlignmentType.CENTER,
-    })
-  );
-
-  // Metadata
-  sections.push(
-    new Paragraph({
-      text: `Generated on: ${new Date(analysisData.timestamp).toLocaleString()}`,
-      alignment: AlignmentType.RIGHT,
-    })
-  );
-  
-  sections.push(
-    new Paragraph({
-      text: `Number of images analyzed: ${analysisData.imageCount}`,
-      alignment: AlignmentType.RIGHT,
-    })
-  );
-
-  // Separator
-  sections.push(new Paragraph({}));
-
-  // Process the analysis content
-  // We'll split the content into sections based on markdown-like formatting
-  const lines = analysis.split('\n');
-  let currentSection = '';
-  let inTable = false;
-  let tableRows = [];
-  let tableHeaders = [];
-
-  for (let i = 0; i < lines.length; i++) {
-    const line = lines[i].trim();
-    
-    // Check if this is a heading
-    if (line.startsWith('# ')) {
-      // Add a new heading
-      sections.push(
-        new Paragraph({
-          text: line.substring(2),
-          heading: HeadingLevel.HEADING_1,
-        })
-      );
-    } else if (line.startsWith('## ')) {
-      // Add a new subheading
-      sections.push(
-        new Paragraph({
-          text: line.substring(3),
-          heading: HeadingLevel.HEADING_2,
-        })
-      );
-    } else if (line.startsWith('|') && line.endsWith('|')) {
-      // This is a table row
-      if (!inTable) {
-        inTable = true;
-        // This is the header row
-        tableHeaders = line
-          .split('|')
-          .filter(cell => cell.trim() !== '')
-          .map(cell => cell.trim());
-      } else if (line.includes('---')) {
-        // This is the separator row, skip it
-        continue;
-      } else {
-        // This is a data row
-        const rowData = line
-          .split('|')
-          .filter(cell => cell.trim() !== '')
-          .map(cell => cell.trim());
-        
-        tableRows.push(rowData);
-      }
-    } else if (inTable && !line.startsWith('|')) {
-      // End of table
-      inTable = false;
-      
-      // Create the table
-      if (tableHeaders.length > 0 && tableRows.length > 0) {
-        const table = createTable(tableHeaders, tableRows);
-        sections.push(table);
-        
-        // Reset table data
-        tableHeaders = [];
-        tableRows = [];
-      }
-      
-      // Add the current line if it's not empty
-      if (line) {
-        sections.push(new Paragraph({ text: line }));
-      }
-    } else if (line.startsWith('- ')) {
-      // Bullet point
-      sections.push(
-        new Paragraph({
-          text: line.substring(2),
-          bullet: {
-            level: 0
-          }
-        })
-      );
-    } else if (line.startsWith('  - ')) {
-      // Nested bullet point
-      sections.push(
-        new Paragraph({
-          text: line.substring(4),
-          bullet: {
-            level: 1
-          }
-        })
-      );
-    } else if (line) {
-      // Regular paragraph
-      sections.push(new Paragraph({ text: line }));
-    } else {
-      // Empty line
-      sections.push(new Paragraph({}));
-    }
-  }
-  
-  // If we're still in a table at the end, add it
-  if (inTable && tableHeaders.length > 0 && tableRows.length > 0) {
-    const table = createTable(tableHeaders, tableRows);
-    sections.push(table);
-  }
-
-  // Add all sections to the document
-  doc.addSection({
-    children: sections,
-  });
-
   // Generate the document
   const buffer = await Packer.toBuffer(doc);
   
@@ -214,10 +211,42 @@ export async function generateWordDocument(sessionId: string, analysisData: Anal
  * Creates a table from headers and rows
  * @param headers The table headers
  * @param rows The table rows
- * @returns A Table object
+ * @returns A Paragraph containing the table
  */
-function createTable(headers: string[], rows: string[][]): Table {
+function createTable(headers: string[], rows: string[][]): Paragraph {
+  // Create table rows
+  const tableRows: TableRow[] = [];
+  
+  // Add header row
+  tableRows.push(new TableRow({
+    tableHeader: true,
+    children: headers.map(header => 
+      new TableCell({
+        children: [new Paragraph({ 
+          text: header,
+          alignment: AlignmentType.CENTER,
+        })],
+        shading: {
+          fill: "EEEEEE",
+        },
+      })
+    ),
+  }));
+  
+  // Add data rows
+  rows.forEach(rowData => {
+    tableRows.push(new TableRow({
+      children: rowData.map(cell => 
+        new TableCell({
+          children: [new Paragraph({ text: cell })],
+        })
+      ),
+    }));
+  });
+  
+  // Create the table
   const table = new Table({
+    rows: tableRows,
     width: {
       size: 100,
       type: WidthType.PERCENTAGE,
@@ -256,32 +285,8 @@ function createTable(headers: string[], rows: string[][]): Table {
     },
   });
   
-  // Add header row
-  table.addRow(new TableRow({
-    tableHeader: true,
-    children: headers.map(header => 
-      new TableCell({
-        children: [new Paragraph({ 
-          text: header,
-          alignment: AlignmentType.CENTER,
-        })],
-        shading: {
-          fill: "EEEEEE",
-        },
-      })
-    ),
-  }));
-  
-  // Add data rows
-  rows.forEach(rowData => {
-    table.addRow(new TableRow({
-      children: rowData.map(cell => 
-        new TableCell({
-          children: [new Paragraph({ text: cell })],
-        })
-      ),
-    }));
+  // Wrap the table in a paragraph
+  return new Paragraph({
+    children: [table],
   });
-  
-  return table;
 } 

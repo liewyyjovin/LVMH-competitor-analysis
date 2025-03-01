@@ -2,8 +2,8 @@
 
 import { writeFile } from 'fs/promises'
 import { join } from 'path'
-import { v4 as uuidv4 } from 'uuid'
 import { mkdir } from 'fs/promises'
+import { randomUUID } from 'crypto'
 
 // Add DeepSeek API client
 import OpenAI from 'openai'
@@ -15,7 +15,7 @@ const deepseek = new OpenAI({
   baseURL: process.env.DEEPSEEK_API_BASE_URL || 'https://api.deepseek.com/v1',
 });
 
-// The prompt for DeepSeek V3
+// The prompt for DeepSeek R1
 const ANALYSIS_PROMPT = `You are a luxury retail and duty-free sales expert. Analyze the following competitor's staff sales incentive data to help an LVMH brand compete effectively. 
 
 COMPETITOR DATA:
@@ -54,7 +54,7 @@ export async function uploadImages(formData: FormData) {
     await mkdir(uploadDir, { recursive: true });
     
     // Create a unique session ID for this batch of uploads
-    const sessionId = uuidv4();
+    const sessionId = randomUUID();
     const sessionDir = join(uploadDir, sessionId);
     await mkdir(sessionDir, { recursive: true });
     
@@ -65,7 +65,7 @@ export async function uploadImages(formData: FormData) {
     for (const [key, value] of formData.entries()) {
       if (value instanceof File) {
         const buffer = Buffer.from(await value.arrayBuffer());
-        const filename = `${uuidv4()}-${value.name}`;
+        const filename = `${randomUUID()}-${value.name}`;
         const filepath = join(sessionDir, filename);
         
         // Save the file
@@ -75,7 +75,7 @@ export async function uploadImages(formData: FormData) {
         // Get image description using DeepSeek's vision capabilities
         try {
           const response = await deepseek.chat.completions.create({
-            model: "deepseek-v3-vision",
+            model: "deepseek-reasoner",
             messages: [
               {
                 role: "user",
@@ -84,11 +84,11 @@ export async function uploadImages(formData: FormData) {
                   {
                     type: "image_url",
                     image_url: {
-                      url: `data:${value.type};base64,${buffer.toString('base64')}`,
-                    },
-                  },
-                ],
-              },
+                      url: `data:${value.type};base64,${buffer.toString('base64')}`
+                    }
+                  }
+                ]
+              }
             ],
             max_tokens: 4000,
           });
@@ -96,7 +96,7 @@ export async function uploadImages(formData: FormData) {
           imageDescriptions.push(response.choices[0]?.message?.content || "No data extracted");
         } catch (error) {
           console.error("Error analyzing image with DeepSeek:", error);
-          imageDescriptions.push("Error analyzing image");
+          imageDescriptions.push(`Image: ${value.name} (Unable to extract text - please review manually)`);
         }
       }
     }
@@ -105,38 +105,50 @@ export async function uploadImages(formData: FormData) {
     const combinedData = imageDescriptions.join("\n\n");
     
     // Generate the final analysis using DeepSeek
-    const finalAnalysis = await deepseek.chat.completions.create({
-      model: "deepseek-v3",
-      messages: [
-        {
-          role: "user",
-          content: ANALYSIS_PROMPT.replace("[Structured data extracted from images provided by the user]", combinedData),
-        },
-      ],
-      max_tokens: 4000,
-    });
-    
-    const analysisResult = finalAnalysis.choices[0]?.message?.content || "No analysis generated";
-    
-    // Save the analysis result
-    const analysisData = {
-      timestamp: new Date().toISOString(),
-      imageCount: files.length,
-      analysis: analysisResult
-    };
-    
-    const analysisPath = join(sessionDir, 'analysis.json');
-    await writeFile(analysisPath, JSON.stringify(analysisData));
-    
-    // Generate Word document
-    const docPath = await generateWordDocument(sessionId, analysisData);
-    
-    return { 
-      success: true, 
-      sessionId,
-      analysisResult,
-      docPath
-    };
+    try {
+      const finalAnalysis = await deepseek.chat.completions.create({
+        model: "deepseek-reasoner",
+        messages: [
+          {
+            role: "user",
+            content: ANALYSIS_PROMPT.replace("[Structured data extracted from images provided by the user]", combinedData)
+          }
+        ],
+        max_tokens: 4000,
+      });
+      
+      const analysisResult = finalAnalysis.choices[0]?.message?.content || "No analysis generated";
+      
+      // Save the analysis result
+      const analysisData = {
+        timestamp: new Date().toISOString(),
+        imageCount: files.length,
+        analysis: analysisResult
+      };
+      
+      const analysisPath = join(sessionDir, 'analysis.json');
+      await writeFile(analysisPath, JSON.stringify(analysisData));
+      
+      // Generate Word document
+      const docPath = await generateWordDocument(sessionId, analysisData);
+      
+      return { 
+        success: true, 
+        sessionId,
+        analysisResult,
+        docPath
+      };
+    } catch (error: any) {
+      console.error("Error generating analysis:", error);
+      
+      // Fallback to returning just the extracted data
+      return {
+        success: false,
+        error: `Failed to generate analysis: ${error.message}`,
+        extractedData: combinedData,
+        sessionId
+      };
+    }
   } catch (error: any) {
     console.error("Upload error:", error);
     throw new Error(`Failed to upload and process images: ${error.message}`);

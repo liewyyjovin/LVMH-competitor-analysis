@@ -69,9 +69,15 @@ export function ImageUploader() {
       })
 
       const result = await uploadImages(formData)
+      
+      if (!result.success && result.error) {
+        setError(result.error)
+        return
+      }
+      
       setUploadSuccess(true)
       setSessionId(result.sessionId)
-      setAnalysisResult(result.analysisResult)
+      setAnalysisResult(result.analysisResult || result.extractedData || null)
 
       // Clean up preview URLs
       files.forEach((file) => URL.revokeObjectURL(file.preview))

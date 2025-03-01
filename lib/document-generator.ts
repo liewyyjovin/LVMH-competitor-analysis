@@ -15,196 +15,50 @@ interface AnalysisData {
  * @returns The path to the generated document
  */
 export async function generateWordDocument(sessionId: string, analysisData: AnalysisData): Promise<string> {
-  // Parse the analysis content
-  const { analysis } = analysisData;
-  
-  // Create sections for the document
-  const children: Paragraph[] = [];
-
-  // Title
-  children.push(
-    new Paragraph({
-      text: "LVMH Competitor Analysis Report",
-      heading: HeadingLevel.HEADING_1,
-      alignment: AlignmentType.CENTER,
-    })
-  );
-
-  // Metadata
-  children.push(
-    new Paragraph({
-      text: `Generated on: ${new Date(analysisData.timestamp).toLocaleString()}`,
-      alignment: AlignmentType.RIGHT,
-    })
-  );
-  
-  children.push(
-    new Paragraph({
-      text: `Number of images analyzed: ${analysisData.imageCount}`,
-      alignment: AlignmentType.RIGHT,
-    })
-  );
-
-  // Separator
-  children.push(new Paragraph({}));
-
-  // Process the analysis content
-  // We'll split the content into sections based on markdown-like formatting
-  const lines = analysis.split('\n');
-  let currentSection = '';
-  let inTable = false;
-  let tableRows: string[][] = [];
-  let tableHeaders: string[] = [];
-
-  for (let i = 0; i < lines.length; i++) {
-    const line = lines[i].trim();
+  try {
+    // Parse the analysis content
+    const { analysis } = analysisData;
     
-    // Check if this is a heading
-    if (line.startsWith('# ')) {
-      // Add a new heading
-      children.push(
-        new Paragraph({
-          text: line.substring(2),
-          heading: HeadingLevel.HEADING_1,
-        })
-      );
-    } else if (line.startsWith('## ')) {
-      // Add a new subheading
-      children.push(
-        new Paragraph({
-          text: line.substring(3),
-          heading: HeadingLevel.HEADING_2,
-        })
-      );
-    } else if (line.startsWith('|') && line.endsWith('|')) {
-      // This is a table row
-      if (!inTable) {
-        inTable = true;
-        // This is the header row
-        tableHeaders = line
-          .split('|')
-          .filter(cell => cell.trim() !== '')
-          .map(cell => cell.trim());
-      } else if (line.includes('---')) {
-        // This is the separator row, skip it
-        continue;
-      } else {
-        // This is a data row
-        const rowData = line
-          .split('|')
-          .filter(cell => cell.trim() !== '')
-          .map(cell => cell.trim());
-        
-        tableRows.push(rowData);
-      }
-    } else if (inTable && !line.startsWith('|')) {
-      // End of table
-      inTable = false;
-      
-      // Create the table
-      if (tableHeaders.length > 0 && tableRows.length > 0) {
-        const table = createTable(tableHeaders, tableRows);
-        children.push(table);
-        
-        // Reset table data
-        tableHeaders = [];
-        tableRows = [];
-      }
-      
-      // Add the current line if it's not empty
-      if (line) {
-        children.push(new Paragraph({ text: line }));
-      }
-    } else if (line.startsWith('- ')) {
-      // Bullet point
-      children.push(
-        new Paragraph({
-          text: line.substring(2),
-          bullet: {
-            level: 0
-          }
-        })
-      );
-    } else if (line.startsWith('  - ')) {
-      // Nested bullet point
-      children.push(
-        new Paragraph({
-          text: line.substring(4),
-          bullet: {
-            level: 1
-          }
-        })
-      );
-    } else if (line) {
-      // Regular paragraph
-      children.push(new Paragraph({ text: line }));
-    } else {
-      // Empty line
-      children.push(new Paragraph({}));
-    }
-  }
-  
-  // If we're still in a table at the end, add it
-  if (inTable && tableHeaders.length > 0 && tableRows.length > 0) {
-    const table = createTable(tableHeaders, tableRows);
-    children.push(table);
-  }
-
-  // Create a new document
-  const doc = new Document({
-    sections: [{
-      properties: {},
-      children: children
-    }],
-    styles: {
-      paragraphStyles: [
+    // Create a simple document with minimal formatting
+    const doc = new Document({
+      sections: [
         {
-          id: "Heading1",
-          name: "Heading 1",
-          basedOn: "Normal",
-          next: "Normal",
-          quickFormat: true,
-          run: {
-            size: 28,
-            bold: true,
-            color: "2E5A88"
-          },
-          paragraph: {
-            spacing: {
-              after: 120,
-            },
-          },
+          properties: {},
+          children: [
+            new Paragraph({
+              text: "LVMH Competitor Analysis Report",
+              heading: HeadingLevel.HEADING_1,
+              alignment: AlignmentType.CENTER,
+            }),
+            new Paragraph({
+              text: `Generated on: ${new Date(analysisData.timestamp).toLocaleString()}`,
+              alignment: AlignmentType.RIGHT,
+            }),
+            new Paragraph({
+              text: `Number of images analyzed: ${analysisData.imageCount}`,
+              alignment: AlignmentType.RIGHT,
+            }),
+            new Paragraph({}), // Empty paragraph as separator
+            new Paragraph({
+              text: analysis,
+            }),
+          ],
         },
-        {
-          id: "Heading2",
-          name: "Heading 2",
-          basedOn: "Normal",
-          next: "Normal",
-          quickFormat: true,
-          run: {
-            size: 24,
-            bold: true,
-            color: "2E5A88"
-          },
-          paragraph: {
-            spacing: {
-              before: 240,
-              after: 120,
-            },
-          },
-        },
-      ]
-    }
-  });
+      ],
+    });
 
-  // Generate the document
-  const buffer = await Packer.toBuffer(doc);
-  
-  // Save the document
-  const docPath = join(process.cwd(), 'uploads', sessionId, 'analysis.docx');
-  await writeFile(docPath, buffer);
-  
-  return docPath;
+    // Generate the document
+    const buffer = await Packer.toBuffer(doc);
+    
+    // Save the document
+    const docPath = join(process.cwd(), 'uploads', sessionId, 'analysis.docx');
+    await writeFile(docPath, buffer);
+    
+    return docPath;
+  } catch (error: any) {
+    console.error("Error generating document:", error);
+    throw new Error(`Failed to generate document: ${error.message}`);
+  }
 }
 
 /**

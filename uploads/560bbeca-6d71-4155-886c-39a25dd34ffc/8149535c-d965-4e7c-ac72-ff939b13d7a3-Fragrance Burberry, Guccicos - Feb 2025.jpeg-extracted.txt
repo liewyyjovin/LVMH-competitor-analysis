@@ -1,0 +1,2 @@
+Failed to extract text from Fragrance Burberry, Guccicos - Feb 2025.jpeg: Command failed: tesseract "/Users/jovin/lvmh-competitor-analysis/uploads/560bbeca-6d71-4155-886c-39a25dd34ffc/8149535c-d965-4e7c-ac72-ff939b13d7a3-Fragrance Burberry, Guccicos - Feb 2025.jpeg" stdout -l eng --oem 1 --psm 3
+/bin/sh: tesseract: command not found

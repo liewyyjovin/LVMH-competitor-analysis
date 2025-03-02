@@ -1,0 +1,104 @@
+## Image: Acqua Di Parma - Feb 2025.jpeg
+
+Failed to extract text from Acqua Di Parma - Feb 2025.jpeg: Command failed: tesseract "/Users/jovin/lvmh-competitor-analysis/uploads/717d4e6b-f14f-4c8a-b65f-5ff17acd6948/beb8c48f-527e-48f2-93ce-5bd95babc8d6-Acqua Di Parma - Feb 2025.jpeg" stdout -l eng --oem 1 --psm 3 -c tessjs_create_pdf=0 -c tessjs_create_hocr=0 -c tessjs_create_tsv=0 -c tessjs_create_box=0 -c tessjs_create_unlv=0 -c tessjs_create_osd=0 -c tessedit_char_whitelist=abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789$.,-%()[]{}:;"' -c preserve_interword_spaces=1 -c tessedit_do_invert=0
+/bin/sh: -c: line 0: syntax error near unexpected token `('
+/bin/sh: -c: line 0: `tesseract "/Users/jovin/lvmh-competitor-analysis/uploads/717d4e6b-f14f-4c8a-b65f-5ff17acd6948/beb8c48f-527e-48f2-93ce-5bd95babc8d6-Acqua Di Parma - Feb 2025.jpeg" stdout -l eng --oem 1 --psm 3 -c tessjs_create_pdf=0 -c tessjs_create_hocr=0 -c tessjs_create_tsv=0 -c tessjs_create_box=0 -c tessjs_create_unlv=0 -c tessjs_create_osd=0 -c tessedit_char_whitelist=abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789$.,-%()[]{}:;"' -c preserve_interword_spaces=1 -c tessedit_do_invert=0'
+
+
+---
+
+## Image: Cartier - Feb 2025.jpeg
+
+Failed to extract text from Cartier - Feb 2025.jpeg: Command failed: tesseract "/Users/jovin/lvmh-competitor-analysis/uploads/717d4e6b-f14f-4c8a-b65f-5ff17acd6948/4213b465-4c0c-484d-b699-af485b20aada-Cartier - Feb 2025.jpeg" stdout -l eng --oem 1 --psm 3 -c tessjs_create_pdf=0 -c tessjs_create_hocr=0 -c tessjs_create_tsv=0 -c tessjs_create_box=0 -c tessjs_create_unlv=0 -c tessjs_create_osd=0 -c tessedit_char_whitelist=abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789$.,-%()[]{}:;"' -c preserve_interword_spaces=1 -c tessedit_do_invert=0
+/bin/sh: -c: line 0: syntax error near unexpected token `('
+/bin/sh: -c: line 0: `tesseract "/Users/jovin/lvmh-competitor-analysis/uploads/717d4e6b-f14f-4c8a-b65f-5ff17acd6948/4213b465-4c0c-484d-b699-af485b20aada-Cartier - Feb 2025.jpeg" stdout -l eng --oem 1 --psm 3 -c tessjs_create_pdf=0 -c tessjs_create_hocr=0 -c tessjs_create_tsv=0 -c tessjs_create_box=0 -c tessjs_create_unlv=0 -c tessjs_create_osd=0 -c tessedit_char_whitelist=abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789$.,-%()[]{}:;"' -c preserve_interword_spaces=1 -c tessedit_do_invert=0'
+
+
+---
+
+## Image: CK, Chloe, Kylie - Feb 2025.jpeg
+
+Failed to extract text from CK, Chloe, Kylie - Feb 2025.jpeg: Command failed: tesseract "/Users/jovin/lvmh-competitor-analysis/uploads/717d4e6b-f14f-4c8a-b65f-5ff17acd6948/f11ffc3a-ca23-4a16-937b-2e9ed4bb0f7d-CK, Chloe, Kylie - Feb 2025.jpeg" stdout -l eng --oem 1 --psm 3 -c tessjs_create_pdf=0 -c tessjs_create_hocr=0 -c tessjs_create_tsv=0 -c tessjs_create_box=0 -c tessjs_create_unlv=0 -c tessjs_create_osd=0 -c tessedit_char_whitelist=abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789$.,-%()[]{}:;"' -c preserve_interword_spaces=1 -c tessedit_do_invert=0
+/bin/sh: -c: line 0: syntax error near unexpected token `('
+/bin/sh: -c: line 0: `tesseract "/Users/jovin/lvmh-competitor-analysis/uploads/717d4e6b-f14f-4c8a-b65f-5ff17acd6948/f11ffc3a-ca23-4a16-937b-2e9ed4bb0f7d-CK, Chloe, Kylie - Feb 2025.jpeg" stdout -l eng --oem 1 --psm 3 -c tessjs_create_pdf=0 -c tessjs_create_hocr=0 -c tessjs_create_tsv=0 -c tessjs_create_box=0 -c tessjs_create_unlv=0 -c tessjs_create_osd=0 -c tessedit_char_whitelist=abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789$.,-%()[]{}:;"' -c preserve_interword_spaces=1 -c tessedit_do_invert=0'
+
+
+---
+
+## Image: Diptyque - Feb 2025.jpeg
+
+Failed to extract text from Diptyque - Feb 2025.jpeg: Command failed: tesseract "/Users/jovin/lvmh-competitor-analysis/uploads/717d4e6b-f14f-4c8a-b65f-5ff17acd6948/1ee4cee9-d8fc-4fc1-9c46-c97ad23597d2-Diptyque - Feb 2025.jpeg" stdout -l eng --oem 1 --psm 3 -c tessjs_create_pdf=0 -c tessjs_create_hocr=0 -c tessjs_create_tsv=0 -c tessjs_create_box=0 -c tessjs_create_unlv=0 -c tessjs_create_osd=0 -c tessedit_char_whitelist=abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789$.,-%()[]{}:;"' -c preserve_interword_spaces=1 -c tessedit_do_invert=0
+/bin/sh: -c: line 0: syntax error near unexpected token `('
+/bin/sh: -c: line 0: `tesseract "/Users/jovin/lvmh-competitor-analysis/uploads/717d4e6b-f14f-4c8a-b65f-5ff17acd6948/1ee4cee9-d8fc-4fc1-9c46-c97ad23597d2-Diptyque - Feb 2025.jpeg" stdout -l eng --oem 1 --psm 3 -c tessjs_create_pdf=0 -c tessjs_create_hocr=0 -c tessjs_create_tsv=0 -c tessjs_create_box=0 -c tessjs_create_unlv=0 -c tessjs_create_osd=0 -c tessedit_char_whitelist=abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789$.,-%()[]{}:;"' -c preserve_interword_spaces=1 -c tessedit_do_invert=0'
+
+
+---
+
+## Image: Drunk Elephant - Feb 2025.jpeg
+
+Failed to extract text from Drunk Elephant - Feb 2025.jpeg: Command failed: tesseract "/Users/jovin/lvmh-competitor-analysis/uploads/717d4e6b-f14f-4c8a-b65f-5ff17acd6948/0ee5a3c5-3a0e-408f-b572-3339b3f21ee6-Drunk Elephant - Feb 2025.jpeg" stdout -l eng --oem 1 --psm 3 -c tessjs_create_pdf=0 -c tessjs_create_hocr=0 -c tessjs_create_tsv=0 -c tessjs_create_box=0 -c tessjs_create_unlv=0 -c tessjs_create_osd=0 -c tessedit_char_whitelist=abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789$.,-%()[]{}:;"' -c preserve_interword_spaces=1 -c tessedit_do_invert=0
+/bin/sh: -c: line 0: syntax error near unexpected token `('
+/bin/sh: -c: line 0: `tesseract "/Users/jovin/lvmh-competitor-analysis/uploads/717d4e6b-f14f-4c8a-b65f-5ff17acd6948/0ee5a3c5-3a0e-408f-b572-3339b3f21ee6-Drunk Elephant - Feb 2025.jpeg" stdout -l eng --oem 1 --psm 3 -c tessjs_create_pdf=0 -c tessjs_create_hocr=0 -c tessjs_create_tsv=0 -c tessjs_create_box=0 -c tessjs_create_unlv=0 -c tessjs_create_osd=0 -c tessedit_char_whitelist=abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789$.,-%()[]{}:;"' -c preserve_interword_spaces=1 -c tessedit_do_invert=0'
+
+
+---
+
+## Image: Fragrance Burberry, Guccicos - Feb 2025.jpeg
+
+Failed to extract text from Fragrance Burberry, Guccicos - Feb 2025.jpeg: Command failed: tesseract "/Users/jovin/lvmh-competitor-analysis/uploads/717d4e6b-f14f-4c8a-b65f-5ff17acd6948/c7467bc0-b257-46e2-9cfd-8f30bf5c2efa-Fragrance Burberry, Guccicos - Feb 2025.jpeg" stdout -l eng --oem 1 --psm 3 -c tessjs_create_pdf=0 -c tessjs_create_hocr=0 -c tessjs_create_tsv=0 -c tessjs_create_box=0 -c tessjs_create_unlv=0 -c tessjs_create_osd=0 -c tessedit_char_whitelist=abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789$.,-%()[]{}:;"' -c preserve_interword_spaces=1 -c tessedit_do_invert=0
+/bin/sh: -c: line 0: syntax error near unexpected token `('
+/bin/sh: -c: line 0: `tesseract "/Users/jovin/lvmh-competitor-analysis/uploads/717d4e6b-f14f-4c8a-b65f-5ff17acd6948/c7467bc0-b257-46e2-9cfd-8f30bf5c2efa-Fragrance Burberry, Guccicos - Feb 2025.jpeg" stdout -l eng --oem 1 --psm 3 -c tessjs_create_pdf=0 -c tessjs_create_hocr=0 -c tessjs_create_tsv=0 -c tessjs_create_box=0 -c tessjs_create_unlv=0 -c tessjs_create_osd=0 -c tessedit_char_whitelist=abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789$.,-%()[]{}:;"' -c preserve_interword_spaces=1 -c tessedit_do_invert=0'
+
+
+---
+
+## Image: Fragrance Multibrand - Feb 2025.jpeg
+
+Failed to extract text from Fragrance Multibrand - Feb 2025.jpeg: Command failed: tesseract "/Users/jovin/lvmh-competitor-analysis/uploads/717d4e6b-f14f-4c8a-b65f-5ff17acd6948/e42140a1-2f0d-403a-92a6-632033f9a215-Fragrance Multibrand - Feb 2025.jpeg" stdout -l eng --oem 1 --psm 3 -c tessjs_create_pdf=0 -c tessjs_create_hocr=0 -c tessjs_create_tsv=0 -c tessjs_create_box=0 -c tessjs_create_unlv=0 -c tessjs_create_osd=0 -c tessedit_char_whitelist=abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789$.,-%()[]{}:;"' -c preserve_interword_spaces=1 -c tessedit_do_invert=0
+/bin/sh: -c: line 0: syntax error near unexpected token `('
+/bin/sh: -c: line 0: `tesseract "/Users/jovin/lvmh-competitor-analysis/uploads/717d4e6b-f14f-4c8a-b65f-5ff17acd6948/e42140a1-2f0d-403a-92a6-632033f9a215-Fragrance Multibrand - Feb 2025.jpeg" stdout -l eng --oem 1 --psm 3 -c tessjs_create_pdf=0 -c tessjs_create_hocr=0 -c tessjs_create_tsv=0 -c tessjs_create_box=0 -c tessjs_create_unlv=0 -c tessjs_create_osd=0 -c tessedit_char_whitelist=abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789$.,-%()[]{}:;"' -c preserve_interword_spaces=1 -c tessedit_do_invert=0'
+
+
+---
+
+## Image: Hermes - Feb 2025.jpeg
+
+Failed to extract text from Hermes - Feb 2025.jpeg: Command failed: tesseract "/Users/jovin/lvmh-competitor-analysis/uploads/717d4e6b-f14f-4c8a-b65f-5ff17acd6948/e3f297c2-082d-4082-9a10-8db7e79a640f-Hermes - Feb 2025.jpeg" stdout -l eng --oem 1 --psm 3 -c tessjs_create_pdf=0 -c tessjs_create_hocr=0 -c tessjs_create_tsv=0 -c tessjs_create_box=0 -c tessjs_create_unlv=0 -c tessjs_create_osd=0 -c tessedit_char_whitelist=abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789$.,-%()[]{}:;"' -c preserve_interword_spaces=1 -c tessedit_do_invert=0
+/bin/sh: -c: line 0: syntax error near unexpected token `('
+/bin/sh: -c: line 0: `tesseract "/Users/jovin/lvmh-competitor-analysis/uploads/717d4e6b-f14f-4c8a-b65f-5ff17acd6948/e3f297c2-082d-4082-9a10-8db7e79a640f-Hermes - Feb 2025.jpeg" stdout -l eng --oem 1 --psm 3 -c tessjs_create_pdf=0 -c tessjs_create_hocr=0 -c tessjs_create_tsv=0 -c tessjs_create_box=0 -c tessjs_create_unlv=0 -c tessjs_create_osd=0 -c tessedit_char_whitelist=abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789$.,-%()[]{}:;"' -c preserve_interword_spaces=1 -c tessedit_do_invert=0'
+
+
+---
+
+## Image: Hermes Beauty - Feb 2025.jpeg
+
+Failed to extract text from Hermes Beauty - Feb 2025.jpeg: Command failed: tesseract "/Users/jovin/lvmh-competitor-analysis/uploads/717d4e6b-f14f-4c8a-b65f-5ff17acd6948/a9130333-82a0-48d7-83f1-a752df9d3ef8-Hermes Beauty - Feb 2025.jpeg" stdout -l eng --oem 1 --psm 3 -c tessjs_create_pdf=0 -c tessjs_create_hocr=0 -c tessjs_create_tsv=0 -c tessjs_create_box=0 -c tessjs_create_unlv=0 -c tessjs_create_osd=0 -c tessedit_char_whitelist=abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789$.,-%()[]{}:;"' -c preserve_interword_spaces=1 -c tessedit_do_invert=0
+/bin/sh: -c: line 0: syntax error near unexpected token `('
+/bin/sh: -c: line 0: `tesseract "/Users/jovin/lvmh-competitor-analysis/uploads/717d4e6b-f14f-4c8a-b65f-5ff17acd6948/a9130333-82a0-48d7-83f1-a752df9d3ef8-Hermes Beauty - Feb 2025.jpeg" stdout -l eng --oem 1 --psm 3 -c tessjs_create_pdf=0 -c tessjs_create_hocr=0 -c tessjs_create_tsv=0 -c tessjs_create_box=0 -c tessjs_create_unlv=0 -c tessjs_create_osd=0 -c tessedit_char_whitelist=abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789$.,-%()[]{}:;"' -c preserve_interword_spaces=1 -c tessedit_do_invert=0'
+
+
+---
+
+## Image: Holiday - Feb 2025.jpeg
+
+Failed to extract text from Holiday - Feb 2025.jpeg: Command failed: tesseract "/Users/jovin/lvmh-competitor-analysis/uploads/717d4e6b-f14f-4c8a-b65f-5ff17acd6948/a4a3162e-cc9a-4c88-9dd6-81bf3aaf3c91-Holiday - Feb 2025.jpeg" stdout -l eng --oem 1 --psm 3 -c tessjs_create_pdf=0 -c tessjs_create_hocr=0 -c tessjs_create_tsv=0 -c tessjs_create_box=0 -c tessjs_create_unlv=0 -c tessjs_create_osd=0 -c tessedit_char_whitelist=abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789$.,-%()[]{}:;"' -c preserve_interword_spaces=1 -c tessedit_do_invert=0
+/bin/sh: -c: line 0: syntax error near unexpected token `('
+/bin/sh: -c: line 0: `tesseract "/Users/jovin/lvmh-competitor-analysis/uploads/717d4e6b-f14f-4c8a-b65f-5ff17acd6948/a4a3162e-cc9a-4c88-9dd6-81bf3aaf3c91-Holiday - Feb 2025.jpeg" stdout -l eng --oem 1 --psm 3 -c tessjs_create_pdf=0 -c tessjs_create_hocr=0 -c tessjs_create_tsv=0 -c tessjs_create_box=0 -c tessjs_create_unlv=0 -c tessjs_create_osd=0 -c tessedit_char_whitelist=abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789$.,-%()[]{}:;"' -c preserve_interword_spaces=1 -c tessedit_do_invert=0'
+
+
+---
+
+## Image: Lancaster - Feb 2025.jpeg
+
+Failed to extract text from Lancaster - Feb 2025.jpeg: Command failed: tesseract "/Users/jovin/lvmh-competitor-analysis/uploads/717d4e6b-f14f-4c8a-b65f-5ff17acd6948/f809fc9a-9cbb-46f1-ad56-bbe714b9b9c7-Lancaster - Feb 2025.jpeg" stdout -l eng --oem 1 --psm 3 -c tessjs_create_pdf=0 -c tessjs_create_hocr=0 -c tessjs_create_tsv=0 -c tessjs_create_box=0 -c tessjs_create_unlv=0 -c tessjs_create_osd=0 -c tessedit_char_whitelist=abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789$.,-%()[]{}:;"' -c preserve_interword_spaces=1 -c tessedit_do_invert=0
+/bin/sh: -c: line 0: syntax error near unexpected token `('
+/bin/sh: -c: line 0: `tesseract "/Users/jovin/lvmh-competitor-analysis/uploads/717d4e6b-f14f-4c8a-b65f-5ff17acd6948/f809fc9a-9cbb-46f1-ad56-bbe714b9b9c7-Lancaster - Feb 2025.jpeg" stdout -l eng --oem 1 --psm 3 -c tessjs_create_pdf=0 -c tessjs_create_hocr=0 -c tessjs_create_tsv=0 -c tessjs_create_box=0 -c tessjs_create_unlv=0 -c tessjs_create_osd=0 -c tessedit_char_whitelist=abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789$.,-%()[]{}:;"' -c preserve_interword_spaces=1 -c tessedit_do_invert=0'
+
+
+---
+
+## Image: Nars - Feb 2025.jpeg
+
+Failed to extract text from Nars - Feb 2025.jpeg: Command failed: tesseract "/Users/jovin/lvmh-competitor-analysis/uploads/717d4e6b-f14f-4c8a-b65f-5ff17acd6948/4ff9dd52-8e4a-4139-9738-a161ef7ebe73-Nars - Feb 2025.jpeg" stdout -l eng --oem 1 --psm 3 -c tessjs_create_pdf=0 -c tessjs_create_hocr=0 -c tessjs_create_tsv=0 -c tessjs_create_box=0 -c tessjs_create_unlv=0 -c tessjs_create_osd=0 -c tessedit_char_whitelist=abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789$.,-%()[]{}:;"' -c preserve_interword_spaces=1 -c tessedit_do_invert=0
+/bin/sh: -c: line 0: syntax error near unexpected token `('
+/bin/sh: -c: line 0: `tesseract "/Users/jovin/lvmh-competitor-analysis/uploads/717d4e6b-f14f-4c8a-b65f-5ff17acd6948/4ff9dd52-8e4a-4139-9738-a161ef7ebe73-Nars - Feb 2025.jpeg" stdout -l eng --oem 1 --psm 3 -c tessjs_create_pdf=0 -c tessjs_create_hocr=0 -c tessjs_create_tsv=0 -c tessjs_create_box=0 -c tessjs_create_unlv=0 -c tessjs_create_osd=0 -c tessedit_char_whitelist=abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789$.,-%()[]{}:;"' -c preserve_interword_spaces=1 -c tessedit_do_invert=0'

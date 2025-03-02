@@ -1,0 +1,2 @@
+Failed to extract text from Hermes Beauty - Feb 2025.jpeg: Command failed: tesseract "/Users/jovin/lvmh-competitor-analysis/uploads/560bbeca-6d71-4155-886c-39a25dd34ffc/c79835ff-8018-4eca-a34c-318060bda432-Hermes Beauty - Feb 2025.jpeg" stdout -l eng --oem 1 --psm 3
+/bin/sh: tesseract: command not found

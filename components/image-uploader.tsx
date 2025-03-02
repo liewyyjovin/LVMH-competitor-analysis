@@ -101,7 +101,7 @@ export function ImageUploader() {
       
       setUploadSuccess(true)
       setSessionId(result.sessionId)
-      setAnalysisResult(result.analysisResult || result.extractedData || null)
+      setAnalysisResult(result.analysisResult || null)
 
       // Clean up preview URLs
       files.forEach((file) => URL.revokeObjectURL(file.preview))

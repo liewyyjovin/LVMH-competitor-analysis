@@ -1,0 +1,2 @@
+Failed to extract text from Holiday - Feb 2025.jpeg: Command failed: tesseract "/Users/jovin/lvmh-competitor-analysis/uploads/560bbeca-6d71-4155-886c-39a25dd34ffc/b63d38c0-974d-4838-a944-7859a1d30f5e-Holiday - Feb 2025.jpeg" stdout -l eng --oem 1 --psm 3
+/bin/sh: tesseract: command not found

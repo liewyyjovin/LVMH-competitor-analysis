@@ -1,0 +1,2 @@
+Failed to extract text from Fragrance Multibrand - Feb 2025.jpeg: Command failed: tesseract "/Users/jovin/lvmh-competitor-analysis/uploads/560bbeca-6d71-4155-886c-39a25dd34ffc/6e3271e7-1ac8-4238-89b1-21e3193f6705-Fragrance Multibrand - Feb 2025.jpeg" stdout -l eng --oem 1 --psm 3
+/bin/sh: tesseract: command not found

@@ -1,0 +1,2 @@
+Failed to extract text from Acqua Di Parma - Feb 2025.jpeg: Command failed: tesseract "/Users/jovin/lvmh-competitor-analysis/uploads/560bbeca-6d71-4155-886c-39a25dd34ffc/c6a16e8a-0b4c-46f2-886f-f40d0bd31544-Acqua Di Parma - Feb 2025.jpeg" stdout -l eng --oem 1 --psm 3
+/bin/sh: tesseract: command not found

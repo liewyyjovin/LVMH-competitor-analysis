@@ -1,0 +1,92 @@
+## Image: Acqua Di Parma - Feb 2025.jpeg
+
+Failed to extract text from Acqua Di Parma - Feb 2025.jpeg: Command failed: tesseract "/Users/jovin/lvmh-competitor-analysis/uploads/560bbeca-6d71-4155-886c-39a25dd34ffc/c6a16e8a-0b4c-46f2-886f-f40d0bd31544-Acqua Di Parma - Feb 2025.jpeg" stdout -l eng --oem 1 --psm 3
+/bin/sh: tesseract: command not found
+
+
+---
+
+## Image: Cartier - Feb 2025.jpeg
+
+Failed to extract text from Cartier - Feb 2025.jpeg: Command failed: tesseract "/Users/jovin/lvmh-competitor-analysis/uploads/560bbeca-6d71-4155-886c-39a25dd34ffc/78b77202-79de-49e6-ab70-00fd6527f332-Cartier - Feb 2025.jpeg" stdout -l eng --oem 1 --psm 3
+/bin/sh: tesseract: command not found
+
+
+---
+
+## Image: CK, Chloe, Kylie - Feb 2025.jpeg
+
+Failed to extract text from CK, Chloe, Kylie - Feb 2025.jpeg: Command failed: tesseract "/Users/jovin/lvmh-competitor-analysis/uploads/560bbeca-6d71-4155-886c-39a25dd34ffc/d45c4533-a1ef-49bd-9617-384c5a59dd1b-CK, Chloe, Kylie - Feb 2025.jpeg" stdout -l eng --oem 1 --psm 3
+/bin/sh: tesseract: command not found
+
+
+---
+
+## Image: Diptyque - Feb 2025.jpeg
+
+Failed to extract text from Diptyque - Feb 2025.jpeg: Command failed: tesseract "/Users/jovin/lvmh-competitor-analysis/uploads/560bbeca-6d71-4155-886c-39a25dd34ffc/5fab8a15-6231-432e-957d-78bc8a50f5b9-Diptyque - Feb 2025.jpeg" stdout -l eng --oem 1 --psm 3
+/bin/sh: tesseract: command not found
+
+
+---
+
+## Image: Drunk Elephant - Feb 2025.jpeg
+
+Failed to extract text from Drunk Elephant - Feb 2025.jpeg: Command failed: tesseract "/Users/jovin/lvmh-competitor-analysis/uploads/560bbeca-6d71-4155-886c-39a25dd34ffc/79d9474f-c430-4c7e-b098-f6ded9a6e656-Drunk Elephant - Feb 2025.jpeg" stdout -l eng --oem 1 --psm 3
+/bin/sh: tesseract: command not found
+
+
+---
+
+## Image: Fragrance Burberry, Guccicos - Feb 2025.jpeg
+
+Failed to extract text from Fragrance Burberry, Guccicos - Feb 2025.jpeg: Command failed: tesseract "/Users/jovin/lvmh-competitor-analysis/uploads/560bbeca-6d71-4155-886c-39a25dd34ffc/8149535c-d965-4e7c-ac72-ff939b13d7a3-Fragrance Burberry, Guccicos - Feb 2025.jpeg" stdout -l eng --oem 1 --psm 3
+/bin/sh: tesseract: command not found
+
+
+---
+
+## Image: Fragrance Multibrand - Feb 2025.jpeg
+
+Failed to extract text from Fragrance Multibrand - Feb 2025.jpeg: Command failed: tesseract "/Users/jovin/lvmh-competitor-analysis/uploads/560bbeca-6d71-4155-886c-39a25dd34ffc/6e3271e7-1ac8-4238-89b1-21e3193f6705-Fragrance Multibrand - Feb 2025.jpeg" stdout -l eng --oem 1 --psm 3
+/bin/sh: tesseract: command not found
+
+
+---
+
+## Image: Hermes - Feb 2025.jpeg
+
+Failed to extract text from Hermes - Feb 2025.jpeg: Command failed: tesseract "/Users/jovin/lvmh-competitor-analysis/uploads/560bbeca-6d71-4155-886c-39a25dd34ffc/fefbc1f5-dced-4ddb-8be4-cb72951fd01d-Hermes - Feb 2025.jpeg" stdout -l eng --oem 1 --psm 3
+/bin/sh: tesseract: command not found
+
+
+---
+
+## Image: Hermes Beauty - Feb 2025.jpeg
+
+Failed to extract text from Hermes Beauty - Feb 2025.jpeg: Command failed: tesseract "/Users/jovin/lvmh-competitor-analysis/uploads/560bbeca-6d71-4155-886c-39a25dd34ffc/c79835ff-8018-4eca-a34c-318060bda432-Hermes Beauty - Feb 2025.jpeg" stdout -l eng --oem 1 --psm 3
+/bin/sh: tesseract: command not found
+
+
+---
+
+## Image: Holiday - Feb 2025.jpeg
+
+Failed to extract text from Holiday - Feb 2025.jpeg: Command failed: tesseract "/Users/jovin/lvmh-competitor-analysis/uploads/560bbeca-6d71-4155-886c-39a25dd34ffc/b63d38c0-974d-4838-a944-7859a1d30f5e-Holiday - Feb 2025.jpeg" stdout -l eng --oem 1 --psm 3
+/bin/sh: tesseract: command not found
+
+
+---
+
+## Image: Lancaster - Feb 2025.jpeg
+
+Failed to extract text from Lancaster - Feb 2025.jpeg: Command failed: tesseract "/Users/jovin/lvmh-competitor-analysis/uploads/560bbeca-6d71-4155-886c-39a25dd34ffc/bb6b347b-84ba-4d45-8da1-9b5c02e4c240-Lancaster - Feb 2025.jpeg" stdout -l eng --oem 1 --psm 3
+/bin/sh: tesseract: command not found
+
+
+---
+
+## Image: Nars - Feb 2025.jpeg
+
+Failed to extract text from Nars - Feb 2025.jpeg: Command failed: tesseract "/Users/jovin/lvmh-competitor-analysis/uploads/560bbeca-6d71-4155-886c-39a25dd34ffc/53e97419-7612-4882-8756-5e72ce3e06ba-Nars - Feb 2025.jpeg" stdout -l eng --oem 1 --psm 3
+/bin/sh: tesseract: command not found

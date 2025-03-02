@@ -1,0 +1,2 @@
+Failed to extract text from Lancaster - Feb 2025.jpeg: Command failed: tesseract "/Users/jovin/lvmh-competitor-analysis/uploads/560bbeca-6d71-4155-886c-39a25dd34ffc/bb6b347b-84ba-4d45-8da1-9b5c02e4c240-Lancaster - Feb 2025.jpeg" stdout -l eng --oem 1 --psm 3
+/bin/sh: tesseract: command not found

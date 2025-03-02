@@ -24,15 +24,16 @@ Output: Word document with the following sections:
 
 ## Core Functionalities
 1. Allow users to upload multiple images
-2. Extract structured data from the uploaded images with LLM (Deepseek V3)
-3. Synthesize the information into a word document
-4. Allow users to download the generated word document
+2. Extract structured data from the uploaded images using Tesseract.js for OCR
+3. Analyze the extracted data with DeepSeek Reasoner
+4. Synthesize the information into a word document
+5. Allow users to download the generated word document
 
 ## Setup Instructions
 
 ### Prerequisites
 - Node.js 18+ and npm
-- DeepSeek API key (or OpenAI API key)
+- DeepSeek API key with access to DeepSeek Reasoner model
 
 ### Installation
 
@@ -69,36 +70,59 @@ npm run dev
 ## Usage
 
 1. Upload images of competitor promotions and sales incentives.
-2. Wait for the analysis to complete.
+2. Wait for the analysis to complete (OCR and analysis may take some time).
 3. Download the generated Word document with the analysis.
 
 ## Technical Implementation
 
 - **Frontend**: Next.js, React, TailwindCSS
 - **Backend**: Next.js API routes and server actions
-- **Image Analysis**: DeepSeek V3 Vision model
+- **Image Analysis**: Tesseract.js for OCR text extraction
+- **Data Analysis**: DeepSeek Reasoner for analyzing the extracted data
 - **Document Generation**: docx library
 
-## Prompt for DeepSeek V3
+## How It Works
 
-The prompt used for extracting structured data from the uploaded images:
+1. **OCR with Tesseract.js**: When images are uploaded, they are processed by Tesseract.js, which extracts all text from the images.
+2. **Analysis with DeepSeek Reasoner**: The extracted text is then analyzed by DeepSeek Reasoner to identify patterns, extract structured data, and generate insights.
+3. **Document Generation**: The analysis is formatted into a professional Word document with tables, headings, and formatted text.
+
+## OCR Capabilities
+
+Tesseract.js is an open-source OCR engine that can:
+- Extract text from images, invoices, scanned documents, and more
+- Handle multiple languages (we're using English for this application)
+- Process both structured and unstructured data
+- Recognize text in various fonts and sizes
+
+## OCR Process
+
+The OCR process in this application:
+1. Uploads and saves images to the server
+2. Processes each image with Tesseract.js to extract text
+3. Combines the extracted text from all images
+4. Sends the combined text to DeepSeek Reasoner for analysis
+
+## Analysis Prompt for DeepSeek Reasoner
+
+The prompt used for analyzing the extracted text:
 
 ```
-You are a luxury retail and duty-free sales expert. Analyze the following competitor's staff sales incentive data to help an LVMH brand compete effectively. 
+You are a luxury retail and duty-free sales expert. Analyze the following competitor's staff sales incentive data to help an LVMH brand compete effectively.
 
 COMPETITOR DATA:
-[Structured data extracted from images provided by the user]
+[EXTRACTED_TEXT]
 
 OUTPUT REQUIREMENTS:
 Produce a table with the following:
 1. Group data by incentive type and brand.
 2. Include these columns:
-    * Brand (name of the competitor brand)
-    * Location of promotion (e.g., Terminal 1, Terminal 2, Terminal 3, Terminal 4, Wing, Arrival, etc.)
-    * Eligible staff (e.g., GS BA, Shilla Payroll, GS, etc.)
-    * Incentive type (e.g., Cash, Voucher, Product)
-    * Incentive description (brief details of the incentive)
-    * List of all relevant SKUs or products tied to the incentive
+   * Brand (name of the competitor brand)
+   * Location of promotion (e.g., Terminal 1, Terminal 2, Terminal 3, Terminal 4, Wing, Arrival, etc.)
+   * Eligible staff (e.g., GS BA, Shilla Payroll, GS, etc.)
+   * Incentive type (e.g., Cash, Voucher, Product)
+   * Incentive description (brief details of the incentive)
+   * List of all relevant SKUs or products tied to the incentive
 
 After producing the table, come up with a list of recommendations & analysis with the following format:
 1. Which are the top 3 most attractive incentives across all brands?

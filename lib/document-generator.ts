@@ -9,6 +9,22 @@ interface AnalysisData {
 }
 
 /**
+ * Formats elapsed time in a human-readable format
+ * @param ms Milliseconds
+ * @returns Formatted string (e.g. "2m 30s")
+ */
+function formatElapsedTime(ms: number): string {
+  const seconds = Math.floor(ms / 1000);
+  const minutes = Math.floor(seconds / 60);
+  const remainingSeconds = seconds % 60;
+  
+  if (minutes > 0) {
+    return `${minutes}m ${remainingSeconds}s`;
+  }
+  return `${remainingSeconds}s`;
+}
+
+/**
  * Generates a Word document from the analysis result
  * @param sessionId The session ID
  * @param analysisData The analysis data
@@ -16,12 +32,27 @@ interface AnalysisData {
  */
 export async function generateWordDocument(sessionId: string, analysisData: AnalysisData): Promise<string> {
   try {
+    console.log('');
+    console.log('='.repeat(50));
+    console.log('📝 STARTING DOCUMENT GENERATION');
+    console.log('='.repeat(50));
+    console.log(`📊 Session ID: ${sessionId}`);
+    console.log(`📊 Images analyzed: ${analysisData.imageCount}`);
+    console.log(`📊 Timestamp: ${analysisData.timestamp}`);
+    console.log('');
+    
+    const startTime = Date.now();
+    console.log('🔍 Parsing analysis content...');
+    
     // Parse the analysis content
     const { analysis } = analysisData;
     
     // Split the content into sections
     const lines = analysis.split('\n');
+    console.log(`📊 Analysis content: ${lines.length} lines`);
     const children = [];
+    
+    console.log('📄 Creating document structure...');
     
     // Add title and header
     children.push(
@@ -80,11 +111,20 @@ export async function generateWordDocument(sessionId: string, analysisData: Anal
     let tableRows: string[][] = [];
     let currentSection = '';
     
+    console.log('🔍 Processing content structure...');
+    
+    let headingCount = 0;
+    let subheadingCount = 0;
+    let paragraphCount = 0;
+    let tableCount = 0;
+    let bulletPointCount = 0;
+    
     for (let i = 0; i < lines.length; i++) {
       const line = lines[i].trim();
       
       if (line.startsWith('# ')) {
         // Main heading
+        headingCount++;
         children.push(
           new Paragraph({
             text: line.substring(2),
@@ -97,6 +137,7 @@ export async function generateWordDocument(sessionId: string, analysisData: Anal
         );
       } else if (line.startsWith('## ')) {
         // Subheading
+        subheadingCount++;
         children.push(
           new Paragraph({
             text: line.substring(3),
@@ -109,6 +150,7 @@ export async function generateWordDocument(sessionId: string, analysisData: Anal
         );
       } else if (line.startsWith('### ')) {
         // Sub-subheading
+        subheadingCount++;
         children.push(
           new Paragraph({
             children: [
@@ -128,6 +170,8 @@ export async function generateWordDocument(sessionId: string, analysisData: Anal
         // Table row
         if (!inTable) {
           inTable = true;
+          tableCount++;
+          console.log(`📊 Processing table #${tableCount}...`);
           // Extract headers
           tableHeaders = line
             .split('|')
@@ -151,6 +195,7 @@ export async function generateWordDocument(sessionId: string, analysisData: Anal
         
         if (tableHeaders.length > 0 && tableRows.length > 0) {
           // Create table
+          console.log(`📊 Creating table with ${tableRows.length} rows and ${tableHeaders.length} columns`);
           const table = createTable(tableHeaders, tableRows);
           children.push(table);
           
@@ -161,10 +206,12 @@ export async function generateWordDocument(sessionId: string, analysisData: Anal
         
         // Process the current line if not empty
         if (line) {
+          paragraphCount++;
           children.push(createParagraphFromLine(line));
         }
       } else if (line.startsWith('- ')) {
         // Bullet point
+        bulletPointCount++;
         children.push(
           new Paragraph({
             text: line.substring(2),
@@ -179,6 +226,7 @@ export async function generateWordDocument(sessionId: string, analysisData: Anal
         );
       } else if (line.startsWith('  - ') || line.startsWith('    - ')) {
         // Nested bullet point
+        bulletPointCount++;
         const level = line.startsWith('    - ') ? 2 : 1;
         const text = line.startsWith('    - ') ? line.substring(6) : line.substring(4);
         
@@ -196,6 +244,7 @@ export async function generateWordDocument(sessionId: string, analysisData: Anal
         );
       } else if (line.startsWith('1. ') || line.startsWith('2. ') || line.startsWith('3. ')) {
         // Numbered list
+        bulletPointCount++;
         const match = line.match(/^(\d+)\.\s+(.*)$/);
         if (match) {
           const number = parseInt(match[1]);
@@ -227,15 +276,29 @@ export async function generateWordDocument(sessionId: string, analysisData: Anal
         );
       } else {
         // Regular paragraph
+        paragraphCount++;
         children.push(createParagraphFromLine(line));
       }
     }
     
     // If we're still in a table at the end, add it
     if (inTable && tableHeaders.length > 0 && tableRows.length > 0) {
+      console.log(`📊 Creating final table with ${tableRows.length} rows and ${tableHeaders.length} columns`);
       const table = createTable(tableHeaders, tableRows);
       children.push(table);
     }
+    
+    // Log document structure summary
+    console.log('');
+    console.log('📊 Document Structure Summary:');
+    console.log(`📊 Main Headings: ${headingCount}`);
+    console.log(`📊 Subheadings: ${subheadingCount}`);
+    console.log(`📊 Paragraphs: ${paragraphCount}`);
+    console.log(`📊 Tables: ${tableCount}`);
+    console.log(`📊 Bullet Points: ${bulletPointCount}`);
+    console.log('');
+    
+    console.log('📄 Creating final document...');
     
     // Create document
     const doc = new Document({
@@ -281,23 +344,47 @@ export async function generateWordDocument(sessionId: string, analysisData: Anal
                   },
                 },
               },
+              {
+                level: 2,
+                format: LevelFormat.LOWER_ROMAN,
+                text: '%3.',
+                alignment: AlignmentType.START,
+                style: {
+                  paragraph: {
+                    indent: { left: convertInchesToTwip(1.5), hanging: convertInchesToTwip(0.25) },
+                  },
+                },
+              },
             ],
           },
         ],
       },
     });
     
-    // Generate the document
+    // Create directory for the session
+    const docDir = join(process.cwd(), 'uploads', sessionId);
+    const docPath = join(docDir, 'analysis.docx');
+    
+    console.log(`💾 Packing document to: ${docPath}`);
+    
+    // Generate document
     const buffer = await Packer.toBuffer(doc);
     
-    // Save the document
-    const docPath = join(process.cwd(), 'uploads', sessionId, 'analysis.docx');
+    // Save document
     await writeFile(docPath, buffer);
     
+    const endTime = Date.now();
+    console.log('');
+    console.log('='.repeat(50));
+    console.log(`✅ Document generation completed in ${formatElapsedTime(endTime - startTime)}`);
+    console.log(`📄 Document saved to: ${docPath}`);
+    console.log('='.repeat(50));
+    console.log('');
+    
     return docPath;
-  } catch (error: any) {
-    console.error("Error generating document:", error);
-    throw new Error(`Failed to generate document: ${error.message}`);
+  } catch (error) {
+    console.error('❌ Error generating document:', error);
+    throw new Error(`Failed to generate document: ${error instanceof Error ? error.message : 'Unknown error'}`);
   }
 }
 

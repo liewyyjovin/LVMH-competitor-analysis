@@ -8,6 +8,7 @@ export async function GET(
   { params }: { params: { sessionId: string } }
 ) {
   try {
+    // Correctly destructure and access the sessionId
     const { sessionId } = params;
     
     // Validate session ID format (basic UUID validation)

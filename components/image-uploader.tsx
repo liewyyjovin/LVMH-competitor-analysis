@@ -12,6 +12,12 @@ type FileWithPreview = File & {
   preview: string
 }
 
+interface OcrProgressData {
+  progress: number
+  completed: number
+  total: number
+}
+
 export function ImageUploader() {
   const [files, setFiles] = useState<FileWithPreview[]>([])
   const [isUploading, setIsUploading] = useState(false)
@@ -20,7 +26,10 @@ export function ImageUploader() {
   const [sessionId, setSessionId] = useState<string | null>(null)
   const [analysisResult, setAnalysisResult] = useState<string | null>(null)
   const [elapsedSeconds, setElapsedSeconds] = useState(0)
+  const [ocrProgress, setOcrProgress] = useState<OcrProgressData | null>(null)
+  const [processingTime, setProcessingTime] = useState<string | null>(null)
   const timerRef = useRef<NodeJS.Timeout | null>(null)
+  const progressIntervalRef = useRef<NodeJS.Timeout | null>(null)
 
   // Timer effect for counting seconds while processing
   useEffect(() => {
@@ -43,6 +52,46 @@ export function ImageUploader() {
       }
     }
   }, [isUploading])
+
+  // Effect to poll for OCR progress
+  useEffect(() => {
+    // Clear any existing interval
+    if (progressIntervalRef.current) {
+      clearInterval(progressIntervalRef.current)
+      progressIntervalRef.current = null
+    }
+
+    if (sessionId && isUploading) {
+      // Start polling for progress
+      progressIntervalRef.current = setInterval(async () => {
+        try {
+          const response = await fetch(`/api/ocr-progress?sessionId=${sessionId}`)
+          const data = await response.json()
+          
+          if (response.ok) {
+            setOcrProgress(data)
+            
+            // If OCR is complete (progress is 100%), we can stop polling
+            if (data.progress === 100) {
+              if (progressIntervalRef.current) {
+                clearInterval(progressIntervalRef.current)
+                progressIntervalRef.current = null
+              }
+            }
+          }
+        } catch (err) {
+          console.error("Error fetching OCR progress:", err)
+        }
+      }, 1000) // Poll every second
+    }
+
+    return () => {
+      if (progressIntervalRef.current) {
+        clearInterval(progressIntervalRef.current)
+        progressIntervalRef.current = null
+      }
+    }
+  }, [sessionId, isUploading])
 
   const onDrop = useCallback((acceptedFiles: File[]) => {
     setError(null)
@@ -85,6 +134,8 @@ export function ImageUploader() {
 
     setIsUploading(true)
     setError(null)
+    setOcrProgress(null)
+    setProcessingTime(null)
 
     try {
       const formData = new FormData()
@@ -103,6 +154,19 @@ export function ImageUploader() {
       setSessionId(result.sessionId)
       setAnalysisResult(result.analysisResult || result.extractedData || null)
 
+      // Format the processing time if available
+      if (result.processingTimeMs) {
+        const seconds = Math.floor(result.processingTimeMs / 1000)
+        const minutes = Math.floor(seconds / 60)
+        const remainingSeconds = seconds % 60
+        
+        if (minutes > 0) {
+          setProcessingTime(`${minutes}m ${remainingSeconds}s`)
+        } else {
+          setProcessingTime(`${remainingSeconds}s`)
+        }
+      }
+
       // Clean up preview URLs
       files.forEach((file) => URL.revokeObjectURL(file.preview))
       setFiles([])
@@ -110,6 +174,7 @@ export function ImageUploader() {
       setError(err instanceof Error ? err.message : "Failed to upload images")
     } finally {
       setIsUploading(false)
+      setOcrProgress(null)
     }
   }
 
@@ -142,6 +207,11 @@ export function ImageUploader() {
             <h3 className="text-2xl font-semibold mb-2">Analysis Complete!</h3>
             <p className="text-gray-600 mb-6">
               Your images have been analyzed successfully. You can now download the report.
+              {processingTime && (
+                <span className="block mt-2 text-sm">
+                  Total processing time: <span className="font-semibold">{processingTime}</span>
+                </span>
+              )}
             </p>
             <div className="flex flex-col sm:flex-row gap-4">
               <Button onClick={handleDownload} className="flex items-center">
@@ -246,14 +316,20 @@ export function ImageUploader() {
             <Button onClick={handleUpload} disabled={isUploading} className="min-w-[150px]">
               {isUploading ? (
                 <>
-                  <Clock className="mr-2 h-4 w-4 animate-pulse" />
-                  Thinking... {formatTime(elapsedSeconds)}
+                  {ocrProgress ? (
+                    <>
+                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                      OCR Processing: {ocrProgress.progress}% ({ocrProgress.completed}/{ocrProgress.total}) - {formatTime(elapsedSeconds)}
+                    </>
+                  ) : (
+                    <>
+                      <Clock className="mr-2 h-4 w-4 animate-pulse" />
+                      Processing... {formatTime(elapsedSeconds)}
+                    </>
+                  )}
                 </>
               ) : (
-                <>
-                  <ImageIcon className="mr-2 h-4 w-4" />
-                  Analyze Images
-                </>
+                "Analyze Images"
               )}
             </Button>
           </div>

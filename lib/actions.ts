@@ -8,6 +8,23 @@ import { randomUUID } from 'crypto'
 // Add DeepSeek API client
 import OpenAI from 'openai'
 import { generateWordDocument } from './document-generator'
+import { processMultipleImages } from './tesseract-service'
+
+/**
+ * Formats elapsed time in a human-readable format
+ * @param ms Milliseconds
+ * @returns Formatted string (e.g. "2m 30s")
+ */
+function formatElapsedTime(ms: number): string {
+  const seconds = Math.floor(ms / 1000);
+  const minutes = Math.floor(seconds / 60);
+  const remainingSeconds = seconds % 60;
+  
+  if (minutes > 0) {
+    return `${minutes}m ${remainingSeconds}s`;
+  }
+  return `${remainingSeconds}s`;
+}
 
 // Initialize the DeepSeek client
 const deepseek = new OpenAI({
@@ -49,45 +66,87 @@ ADDITIONAL INSTRUCTIONS:
 
 export async function uploadImages(formData: FormData) {
   try {
+    console.log('');
+    console.log('='.repeat(60));
+    console.log('🚀 STARTING NEW COMPETITOR ANALYSIS SESSION');
+    console.log('='.repeat(60));
+    
+    const startTime = Date.now();
+    
     // Create uploads directory if it doesn't exist
+    console.log('📁 Setting up directories...');
     const uploadDir = join(process.cwd(), 'uploads');
     await mkdir(uploadDir, { recursive: true });
     
     // Create a unique session ID for this batch of uploads
     const sessionId = randomUUID();
+    console.log(`📊 Session ID: ${sessionId}`);
+    
     const sessionDir = join(uploadDir, sessionId);
     await mkdir(sessionDir, { recursive: true });
+    console.log(`📁 Created session directory: ${sessionDir}`);
     
     // Process each file in the formData
     const files = [];
-    const imageDescriptions = [];
+    const imageBuffers: Buffer[] = [];
+    const fileNames: string[] = [];
     
+    console.log('🔍 Reading uploaded files...');
+    
+    // First, collect all image files and buffers
     for (const [key, value] of formData.entries()) {
       if (value instanceof File) {
         const buffer = Buffer.from(await value.arrayBuffer());
         const filename = `${randomUUID()}-${value.name}`;
         const filepath = join(sessionDir, filename);
         
+        console.log(`📄 Processing file: ${value.name} (${Math.round(buffer.length / 1024)} KB)`);
+        
         // Save the file
         await writeFile(filepath, buffer);
         files.push({ name: value.name, path: filepath });
         
-        // For DeepSeek Reasoner (which doesn't support image inputs), we'll use a simpler approach
-        // Just add a placeholder for each image
-        const imageInfo = `Image: ${value.name} (Size: ${Math.round(buffer.length / 1024)} KB)`;
-        imageDescriptions.push(`## ${imageInfo}\n\nThis image likely contains information about sales incentives, promotions, or competitor data for luxury retail products at Changi Airport.`);
+        // Store buffer for OCR processing
+        imageBuffers.push(buffer);
+        fileNames.push(value.name);
       }
     }
     
-    // Combine all image descriptions
-    const combinedData = imageDescriptions.join("\n\n---\n\n");
+    console.log(`📊 Total files: ${files.length}`);
+    
+    // Process all images with Tesseract OCR
+    console.log('');
+    console.log('='.repeat(60));
+    console.log(`🔍 STARTING OCR PROCESSING PHASE (${imageBuffers.length} images)`);
+    console.log('='.repeat(60));
+    
+    const ocrStartTime = Date.now();
+    const extractedTexts = await processMultipleImages(imageBuffers, sessionId);
+    const ocrEndTime = Date.now();
+    
+    console.log(`⏱️  OCR processing completed in ${formatElapsedTime(ocrEndTime - ocrStartTime)}`);
+    
+    // Format the extracted texts
+    console.log('📝 Formatting extracted text data...');
+    const combinedData = extractedTexts.map((text, index) => {
+      return `## Image: ${fileNames[index]}\n\n${text.trim()}`;
+    }).join("\n\n---\n\n");
     
     // Save the extracted data
     const extractedDataPath = join(sessionDir, 'extracted_data.txt');
     await writeFile(extractedDataPath, combinedData);
+    console.log(`💾 Extracted text data saved to: ${extractedDataPath}`);
     
     // Generate the final analysis using DeepSeek
+    console.log('');
+    console.log('='.repeat(60));
+    console.log('🧠 STARTING AI ANALYSIS PHASE');
+    console.log('='.repeat(60));
+    
     try {
+      console.log('🧠 Sending data to DeepSeek AI for analysis...');
+      const analysisStartTime = Date.now();
+      
       const finalAnalysis = await deepseek.chat.completions.create({
         model: "deepseek-reasoner",
         messages: [
@@ -99,7 +158,11 @@ export async function uploadImages(formData: FormData) {
         max_tokens: 4000,
       });
       
+      const analysisEndTime = Date.now();
+      console.log(`⏱️  AI analysis completed in ${formatElapsedTime(analysisEndTime - analysisStartTime)}`);
+      
       const analysisResult = finalAnalysis.choices[0]?.message?.content || "No analysis generated";
+      console.log('✅ Analysis successfully generated');
       
       // Save the analysis result
       const analysisData = {
@@ -108,20 +171,41 @@ export async function uploadImages(formData: FormData) {
         analysis: analysisResult
       };
       
+      console.log('💾 Saving analysis results...');
       const analysisPath = join(sessionDir, 'analysis.json');
       await writeFile(analysisPath, JSON.stringify(analysisData));
+      console.log(`💾 Analysis saved to: ${analysisPath}`);
       
       // Generate Word document
+      console.log('');
+      console.log('='.repeat(60));
+      console.log('📄 STARTING DOCUMENT GENERATION PHASE');
+      console.log('='.repeat(60));
+      
       const docPath = await generateWordDocument(sessionId, analysisData);
+      
+      const completionTime = Date.now();
+      const totalProcessingTime = completionTime - startTime;
+      
+      console.log('');
+      console.log('='.repeat(60));
+      console.log('✅ PROCESS COMPLETED SUCCESSFULLY');
+      console.log('='.repeat(60));
+      console.log(`⏱️  Total processing time: ${formatElapsedTime(totalProcessingTime)}`);
+      console.log(`📊 Images processed: ${files.length}`);
+      console.log(`📄 Final document: ${docPath}`);
+      console.log('='.repeat(60));
+      console.log('');
       
       return { 
         success: true, 
         sessionId,
         analysisResult,
-        docPath
+        docPath,
+        processingTimeMs: totalProcessingTime
       };
     } catch (error: any) {
-      console.error("Error generating analysis:", error);
+      console.error('❌ Error generating analysis:', error);
       
       // Fallback to returning just the extracted data
       return {
@@ -132,7 +216,7 @@ export async function uploadImages(formData: FormData) {
       };
     }
   } catch (error: any) {
-    console.error("Upload error:", error);
+    console.error('❌ Upload error:', error);
     throw new Error(`Failed to upload and process images: ${error.message}`);
   }
 }

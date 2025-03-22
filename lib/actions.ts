@@ -58,11 +58,19 @@ DATA RULES:
 1. Classify incentive types as: cash, voucher, product, or other identifiable types from the data.
 2. Sort the table by brand name alphabetically (A-Z).
 3. Ensure each row represents a unique incentive type per brand (no duplicate incentive types within the same brand).
+4. ONLY include incentives that are explicitly mentioned in the data - do not invent or hallucinate incentives not present in the images.
+5. If an incentive amount seems unusually high (e.g., $250 per bottle sold), verify it against typical industry norms before including it. If uncertain, note it as "Needs verification" in parentheses.
+6. For incentive amounts, use reasonable ranges when exact figures are unclear, and indicate this is an estimated range.
 
 ADDITIONAL INSTRUCTIONS:
-* If the data is incomplete or unclear, make reasonable assumptions based on luxury retail norms and note them.
-* If SKUs/products are not explicitly listed, infer relevant product categories from the context where possible.
-* Format your response using markdown, with tables using the | syntax for better document generation.`;
+* If the data is incomplete or unclear, indicate this with "Data incomplete" in the relevant fields rather than making assumptions.
+* If SKUs/products are not explicitly listed, use "Not specified" rather than inferring products.
+* DO NOT use markdown formatting like **bold** or _italics_ for brand names or any other text. The document generator will handle formatting.
+* For the recommendations section, use plain text formatting with clear numbered sections.
+* Use simple paragraph text without special markdown formatting.
+* Clearly separate each section of your analysis.
+* If there's any uncertainty about data, explicitly note it rather than making assumptions.
+* IMPORTANT: Only include information that is explicitly present in the images. Do not hallucinate or generate fictional incentives.`;
 
 export async function uploadImages(formData: FormData) {
   try {

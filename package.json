@@ -13,6 +13,8 @@
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "docx": "^9.2.0",
+    "docx-templates": "^4.11.3",
+    "jszip": "^3.10.1",
     "lucide-react": "^0.477.0",
     "next": "15.2.0",
     "node-tesseract-ocr": "^2.2.1",

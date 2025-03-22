@@ -1,6 +1,8 @@
 import { Document, Packer, Paragraph, TextRun, Table, TableRow, TableCell, BorderStyle, WidthType, AlignmentType, HeadingLevel, convertInchesToTwip, LevelFormat, UnderlineType } from 'docx';
-import { writeFile } from 'fs/promises';
-import { join } from 'path';
+import { writeFile, readFile, readdir } from 'fs/promises';
+import { join, extname } from 'path';
+import { existsSync } from 'fs';
+import * as fs from 'fs';
 
 interface AnalysisData {
   timestamp: string;
@@ -22,6 +24,24 @@ function formatElapsedTime(ms: number): string {
     return `${minutes}m ${remainingSeconds}s`;
   }
   return `${remainingSeconds}s`;
+}
+
+/**
+ * Convert image to base64 for embedding in HTML
+ * @param file Path to the image file
+ * @returns Promise with base64 data URL
+ */
+function imageToBase64(file: string): Promise<string> {
+  return new Promise((resolve, reject) => {
+    fs.readFile(file, (err, data) => {
+      if (err) {
+        reject(err);
+      } else {
+        const ext = extname(file).slice(1).toLowerCase();
+        resolve(`data:image/${ext === 'jpg' ? 'jpeg' : ext};base64,${data.toString('base64')}`);
+      }
+    });
+  });
 }
 
 /**
@@ -109,7 +129,6 @@ export async function generateWordDocument(sessionId: string, analysisData: Anal
     let inTable = false;
     let tableHeaders: string[] = [];
     let tableRows: string[][] = [];
-    let currentSection = '';
     
     console.log('🔍 Processing content structure...');
     
@@ -299,6 +318,172 @@ export async function generateWordDocument(sessionId: string, analysisData: Anal
     console.log('');
     
     console.log('📄 Creating final document...');
+    
+    // Add a section for image references with page break
+    children.push(
+      new Paragraph({
+        text: "Source Images for Reference",
+        heading: HeadingLevel.HEADING_1,
+        pageBreakBefore: true,
+        spacing: {
+          before: 400,
+          after: 200,
+        },
+      })
+    );
+    
+    // Add a note about the images
+    children.push(
+      new Paragraph({
+        text: "The following images were used as source data for this analysis. An HTML file with all images is included in the download ZIP file for better viewing.",
+        spacing: {
+          before: 200,
+          after: 400,
+        },
+      })
+    );
+    
+    // Get list of image files in the session directory
+    const uploadsDir = join(process.cwd(), 'uploads', sessionId);
+    console.log(`🔍 Looking for source images in: ${uploadsDir}`);
+    
+    try {
+      // Find all files that might be images in the session directory
+      const sessionFiles = await readdir(uploadsDir);
+      const imageFiles = sessionFiles.filter(file => {
+        const ext = file.toLowerCase().split('.').pop();
+        return ['jpg', 'jpeg', 'png', 'gif', 'bmp'].includes(ext || '');
+      });
+      
+      console.log(`📊 Found ${imageFiles.length} image files for reference`);
+      
+      // Create HTML file with embedded images
+      let htmlContent = `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LVMH Competitor Analysis - Source Images</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      line-height: 1.6;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+    h1 {
+      color: #000080;
+      border-bottom: 2px solid #000080;
+      padding-bottom: 10px;
+    }
+    h2 {
+      color: #333;
+      margin-top: 40px;
+    }
+    img {
+      max-width: 100%;
+      height: auto;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      margin: 20px 0;
+      display: block;
+    }
+    .image-container {
+      margin-bottom: 40px;
+      padding-bottom: 20px;
+      border-bottom: 1px solid #eee;
+    }
+    .timestamp {
+      color: #666;
+      font-size: 0.9em;
+      text-align: right;
+    }
+  </style>
+</head>
+<body>
+  <h1>LVMH Competitor Analysis - Source Images</h1>
+  <p class="timestamp">Generated on: ${new Date(analysisData.timestamp).toLocaleString()}</p>
+  <p>The following ${imageFiles.length} images were analyzed to generate the competitor analysis report.</p>`;
+      
+      // Add each image to the HTML content
+      for (let i = 0; i < imageFiles.length; i++) {
+        const imageFile = imageFiles[i];
+        const imagePath = join(uploadsDir, imageFile);
+        
+        try {
+          console.log(`📷 Processing image for HTML: ${imageFile}`);
+          const base64Image = await imageToBase64(imagePath);
+          
+          htmlContent += `
+  <div class="image-container">
+    <h2>Image ${i + 1}: ${imageFile}</h2>
+    <img src="${base64Image}" alt="${imageFile}" />
+  </div>`;
+        } catch (error: any) {
+          console.error(`❌ Error processing image ${imageFile}:`, error);
+          htmlContent += `
+  <div class="image-container">
+    <h2>Image ${i + 1}: ${imageFile}</h2>
+    <p>Error embedding image: ${error?.message || 'Unknown error'}</p>
+  </div>`;
+        }
+        
+        // Add image title/note to the Word document
+        children.push(
+          new Paragraph({
+            text: `Image ${i + 1}: ${imageFile}`,
+            heading: HeadingLevel.HEADING_3,
+            spacing: {
+              before: 300,
+              after: 200,
+            },
+          })
+        );
+        
+        // Add note about viewing the image in the HTML file
+        children.push(
+          new Paragraph({
+            text: `This image is available in the Source_Images.html file included in the ZIP download.`,
+            spacing: {
+              before: 100,
+              after: 300,
+            },
+          })
+        );
+      }
+      
+      // Finalize HTML content
+      htmlContent += `
+</body>
+</html>`;
+      
+      // Save the HTML file
+      const htmlPath = join(uploadsDir, 'embedded_images.html');
+      console.log(`💾 Writing HTML file with embedded images to: ${htmlPath}`);
+      await writeFile(htmlPath, htmlContent);
+      
+      // Add note about the HTML file to the DOCX
+      children.push(
+        new Paragraph({
+          text: `A complete HTML file with all source images is included in the download ZIP file.`,
+          spacing: {
+            before: 200,
+            after: 200,
+          },
+        })
+      );
+    } catch (error: any) {
+      console.error('❌ Error processing images directory:', error);
+      children.push(
+        new Paragraph({
+          text: `Could not process source images: ${error?.message || 'Unknown error'}`,
+          spacing: {
+            before: 200,
+            after: 400,
+          },
+        })
+      );
+    }
     
     // Create document
     const doc = new Document({
@@ -502,38 +687,47 @@ function createTable(headers: string[], rows: string[][]): Table {
 }
 
 /**
- * Creates a paragraph from a line of text with formatting
+ * Creates a paragraph from a line of text with improved formatting
  * @param line The line of text
  * @returns A formatted Paragraph
  */
 function createParagraphFromLine(line: string): Paragraph {
-  // Check for special formatting
+  // Process text with formatting markers first
   if (line.includes('**') || line.includes('__')) {
-    // Handle bold text
-    const parts = line.split(/(\*\*.*?\*\*|__.*?__)/g);
-    const textRuns = parts.map(part => {
-      if (part.startsWith('**') && part.endsWith('**')) {
-        return new TextRun({
-          text: part.substring(2, part.length - 2),
-          bold: true,
-        });
-      } else if (part.startsWith('__') && part.endsWith('__')) {
-        return new TextRun({
-          text: part.substring(2, part.length - 2),
-          bold: true,
-          underline: {
-            type: UnderlineType.SINGLE,
-          },
-        });
+    // Handle bold text by separating into segments
+    const parts = [];
+    let currentText = '';
+    let isBold = false;
+    
+    for (let i = 0; i < line.length; i++) {
+      if (i < line.length - 1 && line.substr(i, 2) === '**') {
+        // Push current text with current state
+        if (currentText) {
+          parts.push(new TextRun({
+            text: currentText,
+            bold: isBold,
+          }));
+          currentText = '';
+        }
+        
+        // Toggle bold state
+        isBold = !isBold;
+        i++; // Skip the second *
       } else {
-        return new TextRun({
-          text: part,
-        });
+        currentText += line[i];
       }
-    });
+    }
+    
+    // Add any remaining text
+    if (currentText) {
+      parts.push(new TextRun({
+        text: currentText,
+        bold: isBold,
+      }));
+    }
     
     return new Paragraph({
-      children: textRuns,
+      children: parts,
       spacing: {
         before: 120,
         after: 120,
@@ -549,4 +743,4 @@ function createParagraphFromLine(line: string): Paragraph {
       },
     });
   }
-} 
+}
